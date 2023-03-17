@@ -7,6 +7,8 @@ fn main() {
 
     let (res, _errs) = transpose_tabs(tabs, -12, "richter");
     println!("{}", res);
+    let semitones = get_playable_semitone_offsets(tabs, "richter");
+    dbg!(semitones);
 }
 
 pub fn transpose_tabs(
@@ -44,4 +46,26 @@ pub fn transpose_tabs(
         result.push('\n');
     }
     (result, errors)
+}
+
+pub fn get_playable_semitone_offsets(
+    tab: &str,
+    input_tuning: &str,
+) -> Vec<i32> {
+    let mut results = Vec::new();
+    if tab.is_empty() {
+        return results;
+    }
+    for semitones in -24..=24 {
+        let (notes, _errors) = transpose_tabs(
+            tab,
+            semitones,
+            input_tuning,
+        );
+
+        if !notes.contains("X") {
+            results.push(semitones);
+        }
+    }
+    results
 }
