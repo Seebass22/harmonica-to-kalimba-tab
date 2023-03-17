@@ -18,8 +18,8 @@ pub fn transpose_tabs(
 ) -> (String, Vec<String>) {
     let (input_notes, duplicated_notes) = harptabber::tuning_to_notes_in_order(input_tuning);
 
-    let _kalimba_notes = "C X D X E F X G X A X B C' X D' X E' F' X G' X A' X B' C'' X D'' X E''";
-    let kalimba_numbers = "1 X 2 X 3 4 X 5 X 6 X 7 1' X 2' X 3' 4' X 5' X 6' X 7' 1'' X 2'' X 3''";
+    let _kalimba_notes = "C X D X E F X G X A X B C° X D° X E° F° X G° X A° X B° C°° X D°° X E°°";
+    let kalimba_numbers = "1 X 2 X 3 4 X 5 X 6 X 7 1° X 2° X 3° 4° X 5° X 6° X 7° 1°° X 2°° X 3°°";
     let output_notes: Vec<String> = kalimba_numbers
         .split_whitespace()
         .map(|s| s.to_owned())
