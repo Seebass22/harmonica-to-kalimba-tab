@@ -330,6 +330,7 @@ dependencies = [
 [[package]]
 name = "harptabber"
 version = "0.1.0"
+source = "git+https://github.com/Seebass22/harptabber?rev=6283756#628375692ba2925e451fc7b33192f245349f2eac"
 dependencies = [
  "clap",
  "harptool",
