@@ -1,0 +1,10 @@
+[package]
+name = "harmonica-to-kalimba-tab"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# harptabber = { git = "https://github.com/Seebass22/harptabber", rev = "2ebf4b0" }
+harptabber = { path = "../harptabber/harptabber" }
