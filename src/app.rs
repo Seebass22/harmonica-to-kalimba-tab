@@ -1,12 +1,14 @@
 #[path = "harp2kalimba.rs"]
 mod harp2kalimba;
 use egui::{Button, RichText, TextStyle};
+use harp2kalimba::TabStyle;
 
 pub struct App {
     input_tab: String,
     output_tab: String,
     semitone_offset: i32,
     playable_keys: Vec<(&'static str, i32)>,
+    tab_style: TabStyle,
 }
 
 impl Default for App {
@@ -22,6 +24,7 @@ impl Default for App {
             output_tab: "".to_owned(),
             semitone_offset: 0,
             playable_keys: Vec::new(),
+            tab_style: TabStyle::Numbers,
         }
     }
 }
@@ -63,6 +66,14 @@ impl eframe::App for App {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("kalimba tab");
             ui.text_edit_multiline(&mut self.output_tab);
+            egui::ComboBox::from_label("tab style").selected_text(self.tab_style.to_string())
+                    .show_ui(ui, |ui| {
+                        for style in [TabStyle::Numbers, TabStyle::Letters].iter() {
+                            if ui.selectable_value(&mut self.tab_style, *style, style.to_string()).changed() {
+                                self.transpose();
+                            }
+                        }
+                    });
             self.playable_keys_panel(ui);
         });
     }
@@ -70,25 +81,23 @@ impl eframe::App for App {
 
 impl App {
     fn transpose(&mut self) {
-        (self.output_tab, _) =
-            harp2kalimba::transpose_tabs(&self.input_tab, self.semitone_offset, "richter");
+        (self.output_tab, _) = harp2kalimba::transpose_tabs(
+            &self.input_tab,
+            self.semitone_offset,
+            "richter",
+            self.tab_style,
+        );
     }
 
     fn playable_keys_panel(&mut self, ui: &mut egui::Ui) {
+        ui.label("playable keys");
         ui.add_enabled(
             false,
-            Button::new(
-                RichText::new("key, semitone change").text_style(TextStyle::Monospace),
-            ),
+            Button::new(RichText::new("key, semitone change").text_style(TextStyle::Monospace)),
         );
 
         for (key, semitones) in self.playable_keys.clone().iter() {
-            let text = format!(
-                "{:width$} {:+width$}",
-                key,
-                semitones,
-                width = 7
-            );
+            let text = format!("{:width$} {:+width$}", key, semitones, width = 7);
 
             if ui
                 .add(Button::new(
