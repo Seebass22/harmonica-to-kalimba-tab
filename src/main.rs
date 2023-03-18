@@ -1,7 +1,7 @@
 #![warn(clippy::all, rust_2018_idioms)]
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
-use harmonica_to_kalimba_tab::App;
 use eframe::egui::Vec2;
+use harmonica_to_kalimba_tab::App;
 
 // When compiling natively:
 #[cfg(not(target_arch = "wasm32"))]

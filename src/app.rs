@@ -66,14 +66,18 @@ impl eframe::App for App {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("kalimba tab");
             ui.text_edit_multiline(&mut self.output_tab);
-            egui::ComboBox::from_label("tab style").selected_text(self.tab_style.to_string())
-                    .show_ui(ui, |ui| {
-                        for style in [TabStyle::Numbers, TabStyle::Letters].iter() {
-                            if ui.selectable_value(&mut self.tab_style, *style, style.to_string()).changed() {
-                                self.transpose();
-                            }
+            egui::ComboBox::from_label("tab style")
+                .selected_text(self.tab_style.to_string())
+                .show_ui(ui, |ui| {
+                    for style in [TabStyle::Numbers, TabStyle::Letters].iter() {
+                        if ui
+                            .selectable_value(&mut self.tab_style, *style, style.to_string())
+                            .changed()
+                        {
+                            self.transpose();
                         }
-                    });
+                    }
+                });
             self.playable_keys_panel(ui);
         });
     }
