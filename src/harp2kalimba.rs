@@ -6,7 +6,7 @@ pub enum TabStyle {
 }
 
 impl fmt::Display for TabStyle {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self)
     }
 }
@@ -70,7 +70,7 @@ pub fn get_playable_keys(tab: &str, input_tuning: &str) -> Vec<(&'static str, i3
         let index = semitones.rem_euclid(12) as usize;
         let key = chromatic_notes[index];
 
-        if !notes.contains("X") {
+        if !notes.contains('X') {
             results.push((key, semitones));
         }
     }
