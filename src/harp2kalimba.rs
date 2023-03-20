@@ -55,19 +55,22 @@ pub fn transpose_tabs(
     (result, errors)
 }
 
-pub fn get_playable_keys(tab: &str, input_tuning: &str) -> Vec<(&'static str, i32)> {
+pub fn get_playable_keys(tab: &str, input_tuning: &str, position: i32) -> Vec<(&'static str, i32)> {
     let mut results = Vec::new();
     if tab.is_empty() {
         return results;
     }
 
+    let shift = ((1 - position) * 7).rem_euclid(12);
+
     let chromatic_notes = [
         "C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B",
     ];
+
     for semitones in -24..=24 {
         let (notes, _errors) = transpose_tabs(tab, semitones, input_tuning, TabStyle::Numbers);
 
-        let index = semitones.rem_euclid(12) as usize;
+        let index = (semitones - shift).rem_euclid(12) as usize;
         let key = chromatic_notes[index];
 
         if !notes.contains('X') {

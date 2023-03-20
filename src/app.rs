@@ -9,6 +9,7 @@ pub struct App {
     semitone_offset: i32,
     playable_keys: Vec<(&'static str, i32)>,
     tab_style: TabStyle,
+    input_position: i32,
 }
 
 impl Default for App {
@@ -25,6 +26,7 @@ impl Default for App {
             semitone_offset: 0,
             playable_keys: Vec::new(),
             tab_style: TabStyle::Numbers,
+            input_position: 1,
         }
     }
 }
@@ -51,15 +53,21 @@ impl eframe::App for App {
         egui::SidePanel::left("side_panel").show(ctx, |ui| {
             ui.heading("harmonica tab");
             if ui.text_edit_multiline(&mut self.input_tab).changed() {
-                self.playable_keys = harp2kalimba::get_playable_keys(&self.input_tab, "richter");
+                self.playable_keys = harp2kalimba::get_playable_keys(&self.input_tab, "richter", self.input_position);
                 self.transpose();
             }
 
             if ui
-                .add(egui::Slider::new(&mut self.semitone_offset, -20..=20).text("semitone change"))
+                .add(egui::Slider::new(&mut self.semitone_offset, -24..=24).text("semitone change"))
                 .changed()
             {
                 self.transpose();
+            };
+            if ui
+                .add(egui::Slider::new(&mut self.input_position, 1..=12).text("harmonica position"))
+                .changed()
+            {
+                self.playable_keys = harp2kalimba::get_playable_keys(&self.input_tab, "richter", self.input_position);
             };
         });
 
