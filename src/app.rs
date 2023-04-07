@@ -1,11 +1,12 @@
 #[path = "harp2kalimba.rs"]
 mod harp2kalimba;
-use egui::{Button, RichText, TextStyle};
+use egui::{Button, RichText, TextStyle, TextEdit};
 use harp2kalimba::TabStyle;
 
 pub struct App {
     input_tab: String,
     output_tab: String,
+    error_text: String,
     semitone_offset: i32,
     playable_keys: Vec<(&'static str, i32)>,
     tab_style: TabStyle,
@@ -23,6 +24,7 @@ impl Default for App {
 4 -4 5 6 6 -6 6 5 4 -4 5 5 -4 -4 4"
                 .to_owned(),
             output_tab: "".to_owned(),
+            error_text: "".to_owned(),
             semitone_offset: 0,
             playable_keys: Vec::new(),
             tab_style: TabStyle::Numbers,
@@ -69,6 +71,16 @@ impl eframe::App for App {
             {
                 self.playable_keys = harp2kalimba::get_playable_keys(&self.input_tab, "richter", self.input_position);
             };
+
+            if !self.error_text.is_empty() {
+                ui.add_space(20.0);
+
+                ui.label("invalid notes");
+                ui.add_enabled(
+                    false,
+                    TextEdit::multiline(&mut self.error_text),
+                );
+            }
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
@@ -93,12 +105,14 @@ impl eframe::App for App {
 
 impl App {
     fn transpose(&mut self) {
-        (self.output_tab, _) = harp2kalimba::transpose_tabs(
+        let (tabs, errors) = harp2kalimba::transpose_tabs(
             &self.input_tab,
             self.semitone_offset,
             "richter",
             self.tab_style,
         );
+        self.output_tab = tabs;
+        self.error_text = errors.join(" ");
     }
 
     fn playable_keys_panel(&mut self, ui: &mut egui::Ui) {
