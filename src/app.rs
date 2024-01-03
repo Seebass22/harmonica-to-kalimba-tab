@@ -1,7 +1,6 @@
-#[path = "harp2kalimba.rs"]
-mod harp2kalimba;
-use egui::{Button, RichText, TextStyle, TextEdit};
-use harp2kalimba::TabStyle;
+use crate::harp2kalimba;
+use crate::harp2kalimba::TabStyle;
+use egui::{Button, RichText, TextEdit, TextStyle};
 
 pub struct App {
     input_tab: String,
@@ -55,7 +54,11 @@ impl eframe::App for App {
         egui::SidePanel::left("side_panel").show(ctx, |ui| {
             ui.heading("harmonica tab");
             if ui.text_edit_multiline(&mut self.input_tab).changed() {
-                self.playable_keys = harp2kalimba::get_playable_keys(&self.input_tab, "richter", self.input_position);
+                self.playable_keys = harp2kalimba::get_playable_keys(
+                    &self.input_tab,
+                    "richter",
+                    self.input_position,
+                );
                 self.transpose();
             }
 
@@ -69,17 +72,18 @@ impl eframe::App for App {
                 .add(egui::Slider::new(&mut self.input_position, 1..=12).text("harmonica position"))
                 .changed()
             {
-                self.playable_keys = harp2kalimba::get_playable_keys(&self.input_tab, "richter", self.input_position);
+                self.playable_keys = harp2kalimba::get_playable_keys(
+                    &self.input_tab,
+                    "richter",
+                    self.input_position,
+                );
             };
 
             if !self.error_text.is_empty() {
                 ui.add_space(20.0);
 
                 ui.label("invalid notes");
-                ui.add_enabled(
-                    false,
-                    TextEdit::multiline(&mut self.error_text),
-                );
+                ui.add_enabled(false, TextEdit::multiline(&mut self.error_text));
             }
         });
 
