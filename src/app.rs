@@ -1,6 +1,7 @@
 use crate::harp2kalimba;
 use crate::harp2kalimba::TabStyle;
 use egui::{Button, RichText, TextEdit, TextStyle};
+use eframe::egui;
 
 pub struct App {
     input_tab: String,
