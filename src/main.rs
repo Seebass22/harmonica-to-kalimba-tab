@@ -5,11 +5,10 @@ use harmonica_to_kalimba_tab::App;
 // When compiling natively:
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> eframe::Result<()> {
-    use eframe::egui::Vec2;
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
 
     let native_options = eframe::NativeOptions {
-        initial_window_size: Some(Vec2::new(550.0, 384.0)),
+        viewport: eframe::egui::ViewportBuilder::default().with_inner_size([550.0, 384.0]),
         ..eframe::NativeOptions::default()
     };
     eframe::run_native(

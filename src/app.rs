@@ -1,7 +1,7 @@
 use crate::harp2kalimba;
 use crate::harp2kalimba::TabStyle;
+use eframe::egui::{self, ViewportCommand};
 use egui::{Button, RichText, TextEdit, TextStyle};
-use eframe::egui;
 
 pub struct App {
     input_tab: String,
@@ -46,7 +46,7 @@ impl eframe::App for App {
             egui::menu::bar(ui, |ui| {
                 ui.menu_button("File", |ui| {
                     if ui.button("Quit").clicked() {
-                        _frame.close();
+                        ctx.send_viewport_cmd(ViewportCommand::Close);
                     }
                 });
             });
